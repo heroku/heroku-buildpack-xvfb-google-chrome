@@ -119,23 +119,25 @@ export | grep -E -e ' (PATH|LD_LIBRARY_PATH|LIBRARY_PATH|INCLUDE_PATH|CPATH|CPPP
 topic "Rewrite package-config files"
 find $BUILD_DIR/.apt -type f -ipath '*/pkgconfig/*.pc' | xargs --no-run-if-empty -n 1 sed -i -e 's!^prefix=\(.*\)$!prefix='"$BUILD_DIR"'/.apt\1!g'
 
-
-# Install xvfb
-
 topic "Configuring Xvfb for apt"
-
-# patch Xvfb to use /app/.. paths instead of hardcoded wrong values
-sed -i s:/usr/bin:/app/nib: "/app/.apt/usr/bin/Xvfb"
+# Freedom patch Xvfb to use /app/.. paths instead of hardcoded wrong values
+sed -i s:/usr/bin:/app/nib: "$BUILD_DIR/.apt/usr/bin/Xvfb"
 # create symlinks for Xvfb to use /app/.apt/usr/...
-ln -s /app/.apt/usr/bin /app/nib
+ln -s /app/.apt/usr/bin $BUILD_DIR/nib
+
+topic "Setting up Xvfb display"
+# Start an Xvfb display in the background at startup, and export the display
+# number so that chrome will use it
+cat <<EOF >$BUILD_DIR/.profile.d/010_xvfb.sh
+Xvfb :42 </dev/null &> /dev/null &
+export DISPLAY=:42
+EOF
 
 topic "Creating google-chrome shims"
-
 rm $SHIM
 cat <<EOF >$SHIM
 #!/usr/bin/env bash
-$BIN \$@
-
+$BIN --disable-gpu --no-sandbox \$@
 EOF
 chmod +x $SHIM
 cp $SHIM $BIN_DIR/google-chrome
