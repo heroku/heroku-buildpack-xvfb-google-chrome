@@ -1,11 +1,14 @@
-# heroku-buildpack-google-chrome
+# heroku-buildpack-xvfb-google-chrome
 
-This buildpack downloads and installs (headless) Google Chrome from your choice
+This buildpack downloads and installs Xvfb and Google Chrome from your choice
 of release channels.
+
+Note that Google Chrome now has a `--headless` flag, so for many applications,
+Xvfb may not be required. If so, consider [this buildpack](https://github.com/heroku/heroku-buildpack-google-chrome) instead.
 
 ## Channels
 
-You can choose your release channel by specifying `GOOGLE_CHROME_CHANNEL` as
+You can choose your Chrome release channel by specifying `GOOGLE_CHROME_CHANNEL` as
 a config var for your app, in your app.json (for Heroku CI and Review Apps),
 or in your pipeline settings (for Heroku CI).
 
@@ -14,7 +17,7 @@ channel will be used.
 
 ## Shims and Command Line Flags
 
-This buildpack installs shims that always add `--headless`, `--disable-gpu`,
+This buildpack installs shims that always add `--disable-gpu`
 and `--no-sandbox` to any `google-chrome` command  as they are required for 
 Chrome to run on a Heroku dyno.
 
@@ -29,13 +32,3 @@ tell Selenium where to find the chrome binary. Selenium expects the binary to
 live at `/usr/bin/google-chrome`, but that's a read-only filesystem on Heroku.
 You'll have to tell Selenium and/or chromedriver that Chrome is at
 `/app/.apt/usr/bin/google-chrome` instead.
-
-## Early termination
-
-This buildpack will run Chrome with the `--headless` flag, so you may have
-issues where Chrome immediately shuts down after your command. You can use
-the `--remote-debugging-port` flag to keep Chrome running. For example:
-
-```sh
-$ google-chrome --remote-debugging-port=9222
-```
