@@ -137,7 +137,7 @@ topic "Creating google-chrome shims"
 rm $SHIM
 cat <<EOF >$SHIM
 #!/usr/bin/env bash
-$BIN --disable-gpu --no-sandbox \$@
+exec $BIN --disable-gpu --no-sandbox \$@
 EOF
 chmod +x $SHIM
 cp $SHIM $BIN_DIR/google-chrome
