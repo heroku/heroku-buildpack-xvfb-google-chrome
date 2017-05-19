@@ -16,7 +16,6 @@ LP_DIR=`cd $(dirname $0); cd ..; pwd`
 
 function error() {
   echo " !     $*" >&2
-  exit 1
 }
 
 function topic() {
@@ -30,6 +29,14 @@ function indent() {
     *)      sed -u "$c";;
   esac
 }
+
+stack=${STACK:-heroku-16}
+if [ "${stack,,}" != "cedar-14" ]; then
+  error "The Google Chrome Xvfb buildpack is only supported on Cedar-14."
+  error "For more details see:"
+  error "https://devcenter.heroku.com/articles/heroku-ci#known-issues"
+  exit 1
+fi
 
 # Detect requested channel or default to stable
 if [ -f $ENV_DIR/GOOGLE_CHROME_CHANNEL ]; then
@@ -55,6 +62,7 @@ case "$channel" in
     ;;
   *)
     error "GOOGLE_CHROME_CHANNEL must be 'stable', 'beta', or 'unstable', not '$channel'"
+    exit 1
     ;;
 esac
 
