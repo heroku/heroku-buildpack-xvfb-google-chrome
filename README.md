@@ -6,6 +6,10 @@ of release channels.
 Note that Google Chrome now has a `--headless` flag, so for many applications,
 Xvfb may not be required. If so, consider [this buildpack](https://github.com/heroku/heroku-buildpack-google-chrome) instead.
 
+## Only supported on Cedar-14
+
+Note that this buildpack only works on Cedar-14 stack. For the Heroku-16 stack only the Headless Chrome buildpack is supported. For more details see [Known Issues for Heroku CI](https://devcenter.heroku.com/articles/heroku-ci#xvfb-chrome-buildpack-and-heroku-16).
+
 ## Channels
 
 You can choose your Chrome release channel by specifying `GOOGLE_CHROME_CHANNEL` as
