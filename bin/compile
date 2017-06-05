@@ -61,14 +61,28 @@ case "$channel" in
     SHIM=$BIN_DIR/google-chrome-unstable
     ;;
   *)
-    error "GOOGLE_CHROME_CHANNEL must be 'stable', 'beta', or 'unstable', not '$channel'"
+    error "GOOGLE_CHROME_CHANNEL must be 'stable', 'beta', or 'unstable', not '$channel'."
     exit 1
     ;;
 esac
 
+stack=${STACK:-heroku-16}
+
+# Install correct dependencies according to $STACK
+case "$stack" in
+  "cedar-14")
+    PACKAGES="libxss1"
+    ;;
+  "heroku-16")
+    PACKAGES="libxss1 libx11-xcb1 libxcomposite1 libxcursor1 libxdamage1 libxfixes3 libxi6 libxtst6 libnss3 libgconf-2-4 libxrandr2 libasound2 libatk1.0-0 libgtk2.0-0 libxinerama1"
+    ;;
+  *)
+    error "STACK must be 'cedar-14' or 'heroku-16', not '$stack.'"
+esac
+
 indent "Installing Google Chrome from the $channel channel."
 
-PACKAGES="https://dl.google.com/linux/direct/google-chrome-${channel}_current_amd64.deb libxss1 xvfb"
+PACKAGES="$PACKAGES https://dl.google.com/linux/direct/google-chrome-${channel}_current_amd64.deb"
 
 APT_CACHE_DIR="$CACHE_DIR/apt/cache"
 APT_STATE_DIR="$CACHE_DIR/apt/state"
@@ -154,4 +168,5 @@ cp $SHIM $BIN_DIR/google-chrome
 # about the non-standard location
 cat <<EOF >$BUILD_DIR/.profile.d/010_google-chrome.sh
 export GOOGLE_CHROME_BIN=$BIN
+export GOOGLE_CHROME_SHIM=$SHIM
 EOF
