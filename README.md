@@ -58,3 +58,9 @@ Capybara.register_driver :chrome do |app|
   )
 end
 ```
+
+## Releasing a new version
+
+Make sure you publish this buildpack in the buildpack registry
+
+`heroku buildpacks:publish heroku/xvfb-google-chrome`
