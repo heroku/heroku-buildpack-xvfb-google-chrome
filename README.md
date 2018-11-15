@@ -64,3 +64,5 @@ end
 Make sure you publish this buildpack in the buildpack registry
 
 `heroku buildpacks:publish heroku/xvfb-google-chrome master`
+
+Test
