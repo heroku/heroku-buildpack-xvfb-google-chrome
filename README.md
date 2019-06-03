@@ -8,7 +8,13 @@ Xvfb may not be required. If so, consider [this buildpack](https://github.com/he
 
 ## Only supported on Cedar-14
 
-Note that this buildpack only works on Cedar-14 stack. For the Heroku-16 stack only the Headless Chrome buildpack is supported. For more details see [Known Issues for Heroku CI](https://devcenter.heroku.com/articles/heroku-ci#xvfb-chrome-buildpack-and-heroku-16).
+Note that this buildpack only works on the Cedar-14 stack, for which the end-of-life
+window [began May 1, 2019](https://devcenter.heroku.com/changelog-items/1603).
+
+For newer stacks such as Heroku-16 and Heroku-18 you must instead use the more modern
+[Google Chrome Buildpack](https://github.com/heroku/heroku-buildpack-google-chrome),
+which runs Chrome in headless mode without Xvfb. For more details see
+[Browser and User Acceptance Testing](https://devcenter.heroku.com/articles/heroku-ci-browser-and-user-acceptance-testing-uat#google-chrome-via-headless).
 
 ## Channels
 
